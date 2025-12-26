@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36401.2 d17.14
+VisualStudioVersion = 17.14.36401.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.API", "ERP.API.csproj", "{7894ABDE-C7E0-4C92-B7F0-2EB3EC2D5B26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Domain", "..\ERP.Domain\ERP.Domain.csproj", "{B4FCEA71-475B-4D69-929E-74B3B790C71D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Application", "..\ERP.Application\ERP.Application.csproj", "{3650B049-1C97-437D-9D00-532265499560}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP.Infrastructure", "..\ERP.Infrastructure\ERP.Infrastructure.csproj", "{30F0667A-3C3C-4D0F-8833-CEFBE38CE067}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{7894ABDE-C7E0-4C92-B7F0-2EB3EC2D5B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7894ABDE-C7E0-4C92-B7F0-2EB3EC2D5B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7894ABDE-C7E0-4C92-B7F0-2EB3EC2D5B26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4FCEA71-475B-4D69-929E-74B3B790C71D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4FCEA71-475B-4D69-929E-74B3B790C71D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4FCEA71-475B-4D69-929E-74B3B790C71D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4FCEA71-475B-4D69-929E-74B3B790C71D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3650B049-1C97-437D-9D00-532265499560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3650B049-1C97-437D-9D00-532265499560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3650B049-1C97-437D-9D00-532265499560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3650B049-1C97-437D-9D00-532265499560}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30F0667A-3C3C-4D0F-8833-CEFBE38CE067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30F0667A-3C3C-4D0F-8833-CEFBE38CE067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30F0667A-3C3C-4D0F-8833-CEFBE38CE067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30F0667A-3C3C-4D0F-8833-CEFBE38CE067}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
