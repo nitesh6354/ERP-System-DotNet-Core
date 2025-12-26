@@ -48,16 +48,8 @@ The solution is structured into the following layers:
 - Inventory management
 - Role-based access control
 - Clean and scalable architecture
-
----
-
-## ⚙️ How to Run the Project
-1. Clone the repository:
-```bash
-git clone https://github.com/USERNAME/ERP-System-DotNet-Core.git
-
----------------
-#PROJECT REFERENCE STRUCTURE
+------------------------------------------
+#PROJECT REFERENCES STRUCTURE
 ERP.Domain → no references
 
 ERP.Application → Domain
@@ -65,3 +57,11 @@ ERP.Application → Domain
 ERP.Infrastructure → Domain + Application
 
 ERP.API → Application + Infrastructure
+-------------------------------------------
+
+## ⚙️ How to Run the Project
+1. Clone the repository:
+```bash
+git clone https://github.com/USERNAME/ERP-System-DotNet-Core.g
+
+
