@@ -1,4 +1,5 @@
-﻿using ERP.Application.Interfaces;
+﻿using ERP.API.Middleware;
+using ERP.Application.Interfaces;
 using ERP.Application.Services;
 using ERP.Infrastructure.Data;
 using ERP.Infrastructure.Repositories;
@@ -27,7 +28,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 // 4️⃣ Register Infrastructure repositories
-// Application talks to repository interface
+// Application layer depends on repository interfaces
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 // 5️⃣ Swagger (API documentation)
@@ -39,6 +40,10 @@ var app = builder.Build();
 // ==================================================
 // 2. CONFIGURE HTTP REQUEST PIPELINE (MIDDLEWARE)
 // ==================================================
+
+// 🔴 Global Exception Handling Middleware
+// MUST be the first middleware in the pipeline
+app.UseMiddleware<ExceptionMiddleware>();
 
 // 6️⃣ Swagger only in Development environment
 if (app.Environment.IsDevelopment())
