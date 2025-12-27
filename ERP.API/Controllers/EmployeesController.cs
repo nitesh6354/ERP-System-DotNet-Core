@@ -7,19 +7,20 @@ namespace ERP.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EmployeesController : ControllerBase
+    public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
 
-        // Constructor Injection (Dependency Injection)
-        public EmployeesController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
         }
 
-        // POST: api/employees
+        // ===============================
+        // POST: api/employee
+        // ===============================
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateEmployeeDto dto)
+        public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeDto dto)
         {
             var employeeId = await _employeeService.CreateAsync(dto);
 
@@ -30,13 +31,14 @@ namespace ERP.API.Controllers
                 Data = employeeId
             };
 
-            // 201 Created
-            return StatusCode(StatusCodes.Status201Created, response);
+            return Ok(response);
         }
 
-        // GET: api/employees
+        // ===============================
+        // GET: api/employee
+        // ===============================
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllEmployees()
         {
             var employees = await _employeeService.GetAllAsync();
 
@@ -47,7 +49,7 @@ namespace ERP.API.Controllers
                 Data = employees
             };
 
-            return Ok(response); // 200 OK
+            return Ok(response);
         }
     }
 }

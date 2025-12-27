@@ -6,16 +6,26 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<!-- Project references -->
 	<ItemGroup>
 		<ProjectReference Include="..\ERP.Application\ERP.Application.csproj" />
 		<ProjectReference Include="..\ERP.Infrastructure\ERP.Infrastructure.csproj" />
 	</ItemGroup>
 
+	<!-- NuGet packages -->
 	<ItemGroup>
+		<!-- FluentValidation integration with ASP.NET Core -->
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+
+		<!-- EF Core tools (for migrations) -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>
+				runtime; build; native; contentfiles; analyzers; buildtransitive
+			</IncludeAssets>
 		</PackageReference>
+
+		<!-- Swagger / OpenAPI -->
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 	</ItemGroup>
 

@@ -11,4 +11,9 @@
 		<ProjectReference Include="..\ERP.Domain\ERP.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<!-- REQUIRED for RuleFor & AbstractValidator -->
+		<PackageReference Include="FluentValidation" Version="11.3.1" />
+	</ItemGroup>
+
 </Project>

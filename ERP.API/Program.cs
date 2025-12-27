@@ -15,20 +15,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // 2️⃣ Register DbContext (EF Core + SQL Server)
-// This tells ASP.NET Core how to connect to the database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
-// 3️⃣ Register Application Layer services
-// Interface → Implementation
-// Scoped = one instance per HTTP request
+// 3️⃣ Register Application Layer services (Business logic)
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
-// 4️⃣ Register Infrastructure repositories
-// Application layer depends on repository interfaces
+// 4️⃣ Register Infrastructure repositories (Data access)
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 // 5️⃣ Swagger (API documentation)
@@ -41,26 +37,24 @@ var app = builder.Build();
 // 2. CONFIGURE HTTP REQUEST PIPELINE (MIDDLEWARE)
 // ==================================================
 
-// 🔴 Global Exception Handling Middleware
-// MUST be the first middleware in the pipeline
+// 🔴 Global Exception Handling Middleware (MUST be first)
 app.UseMiddleware<ExceptionMiddleware>();
 
-// 6️⃣ Swagger only in Development environment
+// Swagger only in Development environment
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// 7️⃣ Redirect HTTP → HTTPS
+// Redirect HTTP → HTTPS
 app.UseHttpsRedirection();
 
-// 8️⃣ Authorization middleware
-// (Authentication will be added later)
+// Authorization middleware (Authentication will be added later)
 app.UseAuthorization();
 
-// 9️⃣ Map controller routes
+// Map controller routes
 app.MapControllers();
 
-// 🔟 Start the application
+// Start the application
 app.Run();
