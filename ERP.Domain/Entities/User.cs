@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ERP.Domain.Entities
+﻿namespace ERP.Domain.Entities
 {
-    internal class User
+    public class User
     {
+        public int Id { get; set; }
+
+        public string Username { get; set; } = null!;
+
+        public string PasswordHash { get; set; } = null!;
+
+        public string Role { get; set; } = "User";
+
+        public bool IsActive { get; set; } = true;
     }
 }
+
+//Why in Domain?
+/*
+User is a core business concept
+Domain must be framework-independent
+*/
