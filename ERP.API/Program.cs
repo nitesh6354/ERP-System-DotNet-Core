@@ -3,58 +3,86 @@ using ERP.Application.Interfaces;
 using ERP.Application.Services;
 using ERP.Infrastructure.Data;
 using ERP.Infrastructure.Repositories;
+using ERP.Infrastructure.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ==================================================
-// 1. ADD SERVICES TO THE DEPENDENCY INJECTION (DI)
+// 1. REGISTER SERVICES (Dependency Injection)
 // ==================================================
 
-// 1️⃣ Add Controllers (API endpoints)
+// Add Controllers
 builder.Services.AddControllers();
 
-// 2️⃣ Register DbContext (EF Core + SQL Server)
+// DbContext (EF Core + SQL Server)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
-// 3️⃣ Register Application Layer services (Business logic)
+// Application layer services
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
-// 4️⃣ Register Infrastructure repositories (Data access)
+// Infrastructure repositories
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
-// 5️⃣ Swagger (API documentation)
+// ================= JWT AUTHENTICATION =================
+
+// Read JWT settings from appsettings.json
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+
+// SAFETY CHECK (prevents null crash)
+var jwtKey = jwtSettings["Key"] ?? "SUPER_SECRET_KEY_123";
+
+var key = Encoding.UTF8.GetBytes(jwtKey);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
+
+// Authorization
+builder.Services.AddAuthorization();
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // ==================================================
-// 2. CONFIGURE HTTP REQUEST PIPELINE (MIDDLEWARE)
+// 2. MIDDLEWARE PIPELINE
 // ==================================================
 
-// 🔴 Global Exception Handling Middleware (MUST be first)
+// Global exception handling (FIRST)
 app.UseMiddleware<ExceptionMiddleware>();
 
-// Swagger only in Development environment
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Redirect HTTP → HTTPS
 app.UseHttpsRedirection();
 
-// Authorization middleware (Authentication will be added later)
-app.UseAuthorization();
+// IMPORTANT ORDER
+app.UseAuthentication(); // JWT validation
+app.UseAuthorization();  // Role & policy check
 
-// Map controller routes
 app.MapControllers();
 
-// Start the application
 app.Run();

@@ -1,10 +1,13 @@
 ﻿using ERP.API.Models;
 using ERP.Application.DTOs.Employee;
 using ERP.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.API.Controllers
 {
+    // 🔐 User must be authenticated to access this controller
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EmployeeController : ControllerBase
@@ -16,9 +19,11 @@ namespace ERP.API.Controllers
             _employeeService = employeeService;
         }
 
-        // ===============================
+        // =========================================
         // POST: api/employee
-        // ===============================
+        // Only ADMIN can create employees
+        // =========================================
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeDto dto)
         {
@@ -34,9 +39,11 @@ namespace ERP.API.Controllers
             return Ok(response);
         }
 
-        // ===============================
+        // =========================================
         // GET: api/employee
-        // ===============================
+        // Admin + Employee can view employees
+        // =========================================
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet]
         public async Task<IActionResult> GetAllEmployees()
         {
