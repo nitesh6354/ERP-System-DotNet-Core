@@ -1,9 +1,12 @@
 ﻿using ERP.API.Middleware;
 using ERP.Application.Interfaces;
+using ERP.Application.Interfaces.Auth;
 using ERP.Application.Services;
+using ERP.Infrastructure.Auth;
 using ERP.Infrastructure.Data;
 using ERP.Infrastructure.Repositories;
 using ERP.Infrastructure.Security;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +31,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Application layer services
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+
 
 // Infrastructure repositories
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();

@@ -10,11 +10,7 @@ namespace ERP.Infrastructure.Data
         {
         }
 
-        // DbSets
-        // public DbSet<Employee> Employees { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<User> Users { get; set; }
-
-
+        public DbSet<User> Users => Set<User>();
+        public DbSet<Employee> Employees => Set<Employee>();
     }
 }
