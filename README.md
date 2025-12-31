@@ -1,5 +1,31 @@
 \# ERP System – ASP.NET Core
 
+# ERP System
+
+Enterprise-grade ERP system built using **.NET 8 Clean Architecture**.
+
+## 🏢 Company
+**Nitesh Technologies**
+
+## 👨‍💻 Created By
+**Nitesh Patil**
+
+## 🎯 Purpose
+This project is a **commercial ERP product** designed for:
+- Small & Medium Enterprises
+- HR & Employee Management
+- Secure Role-Based Access (Admin / Employee)
+- Scalable API-first architecture
+
+## 🧱 Tech Stack
+- .NET 8 Web API
+- Entity Framework Core
+- SQL Server
+- JWT Authentication
+- Clean Architecture
+
+## 📌 Status
+🟢 Actively developed and production-ready
 
 
 \## 📌 Project Overview
@@ -111,6 +137,7 @@ The solution is structured into the following layers:
 ```bash
 
 git clone https://github.com/USERNAME/ERP-System-DotNet-Core.git
+
 
 
 
