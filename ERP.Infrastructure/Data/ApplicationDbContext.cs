@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ERP.Domain.Entities;
+﻿using ERP.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Infrastructure.Data
 {
@@ -10,7 +10,7 @@ namespace ERP.Infrastructure.Data
         {
         }
 
-        public DbSet<User> Users => Set<User>();
-        public DbSet<Employee> Employees => Set<Employee>();
+        public DbSet<User> Users { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }

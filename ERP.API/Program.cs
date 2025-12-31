@@ -10,63 +10,83 @@ using ERP.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ==================================================
-// 1. REGISTER SERVICES (Dependency Injection)
+// 1. SERVICES (DEPENDENCY INJECTION)
 // ==================================================
 
-// Add Controllers
 builder.Services.AddControllers();
 
-// DbContext (EF Core + SQL Server)
+// ---------- DATABASE ----------
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
 
-// Application layer services
+// ---------- APPLICATION LAYER ----------
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-
-
-// Infrastructure repositories
+// ---------- INFRASTRUCTURE ----------
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<TokenService>();
 
-// ================= JWT AUTHENTICATION =================
-
-// Read JWT settings from appsettings.json
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-
-// SAFETY CHECK (prevents null crash)
-var jwtKey = jwtSettings["Key"] ?? "SUPER_SECRET_KEY_123";
-
-var key = Encoding.UTF8.GetBytes(jwtKey);
+// ---------- JWT AUTH ----------
+var jwtConfig = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtConfig["Key"]!);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+
+            ValidIssuer = jwtConfig["Issuer"],
+            ValidAudience = jwtConfig["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
     });
 
-// Authorization
 builder.Services.AddAuthorization();
 
-// Swagger
+// ---------- SWAGGER WITH JWT ----------
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: Bearer {your JWT token}"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -74,7 +94,6 @@ var app = builder.Build();
 // 2. MIDDLEWARE PIPELINE
 // ==================================================
 
-// Global exception handling (FIRST)
 app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -85,10 +104,26 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// IMPORTANT ORDER
-app.UseAuthentication(); // JWT validation
-app.UseAuthorization();  // Role & policy check
+// 🔐 AUTH ORDER IS CRITICAL
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
+// ---------- DATABASE SEEDER ----------
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await DbSeeder.SeedAdminAsync(db);
+}
+
 app.Run();
+
+
+// ==================================================
+// Project: ERP System
+// Company: Nitesh Technologies
+// Created By: Nitesh Patil
+// Description: Enterprise Resource Planning (ERP) System
+// Architecture: Layered Architecture (N-Tier) using .NET 8
+// ==================================================

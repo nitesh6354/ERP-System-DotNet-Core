@@ -1,5 +1,4 @@
-﻿using ERP.Application.Interfaces;
-using ERP.Domain.Entities;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,22 +6,32 @@ using System.Text;
 
 namespace ERP.Infrastructure.Security
 {
-    public class TokenService : ITokenService
+    public class TokenService
     {
-        public string GenerateToken(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+        private readonly IConfiguration _configuration;
 
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("SUPER_SECRET_KEY_123")
+        public TokenService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public string GenerateToken(int userId, string username, string role)
+        {
+            var key = Encoding.UTF8.GetBytes(
+                _configuration["JwtSettings:Key"]!
             );
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, username),
+                new Claim(ClaimTypes.Role, role)
+            };
+
+            var creds = new SigningCredentials(
+                new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256
+            );
 
             var token = new JwtSecurityToken(
                 claims: claims,
